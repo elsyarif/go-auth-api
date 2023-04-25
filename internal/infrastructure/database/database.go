@@ -3,14 +3,16 @@ package database
 import (
 	"fmt"
 	"github.com/elsyarif/go-auth-api/pkg/config"
+	"github.com/elsyarif/go-auth-api/pkg/helper/log"
 	"github.com/jmoiron/sqlx"
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
+	"github.com/sirupsen/logrus"
 	"time"
 )
 
 func LoadConfig() error {
-	err := envconfig.Process("GO", &config.Conf)
+	err := envconfig.Process("app", &config.Conf)
 	if err != nil {
 		return err
 	}
@@ -18,6 +20,10 @@ func LoadConfig() error {
 }
 
 func NewConnectPostgres() (*sqlx.DB, error) {
+	log.Info("Database setup info", logrus.Fields{
+		"DBName": config.Conf.DBName,
+	})
+
 	ds := fmt.Sprintf("user=%s password='%s' dbname=%s sslmode=disable", config.Conf.DBUser, config.Conf.DBPass, config.Conf.DBName)
 	db, err := sqlx.Open("postgres", ds)
 	if err != nil {

@@ -11,11 +11,11 @@ import (
 
 type UserService struct {
 	userRepo    repository.UserRepository
-	idGenerator uid.Generator
+	idGenerator uid.NanoGenerator
 	password    encryption.Password
 }
 
-func NewUserService(ur repository.UserRepository, uid uid.Generator, hash encryption.Password) UserService {
+func NewUserService(ur repository.UserRepository, uid uid.NanoGenerator, hash encryption.Password) UserService {
 	return UserService{
 		userRepo:    ur,
 		idGenerator: uid,
@@ -28,10 +28,14 @@ func (u *UserService) CreateUser(ctx context.Context, user entities.User) (*enti
 	if err != nil {
 		return nil, err
 	}
+	err = u.userRepo.VerifyAvailableEmail(ctx, user.Email)
+	if err != nil {
+		return nil, err
+	}
 	now := time.Now().Local()
 
 	// Generate uuid
-	user.Id = u.idGenerator.Uid()
+	user.Id = u.idGenerator.NanoId("user")
 	// Hash password
 	user.Password = u.password.Hash(user.Password)
 	user.IsActive = false

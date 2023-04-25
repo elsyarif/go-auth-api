@@ -12,7 +12,7 @@ import (
 )
 
 func Container(db *sqlx.DB, app *gin.Engine) {
-	idGenerator := uid.New()
+	idGenerator := uid.NewNanoId()
 	hash := encryption.PasswordHash()
 	// User
 	userRepository := repositories.NewUserRepositoryPostgres(db)
