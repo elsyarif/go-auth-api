@@ -12,6 +12,9 @@ type config struct {
 	Host            string        `default:"127.0.0.1"`
 	Port            uint          `default:"5000"`
 	ShutdownTimeout time.Duration `default:"20s"`
+	AccessTokenKey  string        `default:"secret"`
+	RefreshTokenKey string        `default:"secret"`
+	AccessTokenAge  time.Duration `default:"1s"`
 }
 
 var Conf config

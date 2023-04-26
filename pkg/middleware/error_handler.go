@@ -47,6 +47,8 @@ func ErrorHandler(c *gin.Context) {
 			case common.ResourceAlreadyExists:
 				c.JSON(http.StatusBadRequest, response.Error("fail", err.Errors.Error(), nil))
 				return
+			case common.InvalidTokenError:
+				c.JSON(http.StatusBadRequest, resError)
 			default:
 				c.JSON(http.StatusInternalServerError, resError)
 				return

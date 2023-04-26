@@ -83,23 +83,42 @@ func (u *UserRepositoryPostgres) VerifyAvailableEmail(ctx context.Context, email
 	return nil
 }
 
-func (u *UserRepositoryPostgres) GetPasswordByUsername(ctx context.Context, username string) (string, error) {
-	query := "SELECT password FROM users WHERE username = $1"
+func (u *UserRepositoryPostgres) GetPasswordByUsername(ctx context.Context, username string) (string, string, error) {
+	query := "SELECT id, password FROM users WHERE username = $1"
 	user := entities.User{}
 
 	tx, err := u.DB.Beginx()
 	if err != nil {
 		log.Error("database error", logrus.Fields{"with": err})
-		return "", err
+		return "", "", err
 	}
 
 	err = tx.GetContext(ctx, &user, query, username)
 	if err != nil {
 		log.Warn("user tidak ditemukan", logrus.Fields{"username": username})
-		return "", err
+		return "", "", errors.New("user tidak ditemukan")
 	}
 
-	return user.Password, nil
+	return user.Id, user.Password, nil
+}
+
+func (u *UserRepositoryPostgres) GetPasswordByEmail(ctx context.Context, email string) (string, string, error) {
+	query := "SELECT id, password FROM users WHERE email = $1"
+	user := entities.User{}
+
+	tx, err := u.DB.Beginx()
+	if err != nil {
+		log.Error("database error", logrus.Fields{"with": err})
+		return "", "", err
+	}
+
+	err = tx.GetContext(ctx, &user, query, email)
+	if err != nil {
+		log.Warn("user tidak ditemukan", logrus.Fields{"email": email})
+		return "", "", errors.New("user tidak ditemukan")
+	}
+
+	return user.Id, user.Password, nil
 }
 
 func (u *UserRepositoryPostgres) GetIdByUsername(ctx context.Context, username string) (string, error) {
@@ -119,4 +138,23 @@ func (u *UserRepositoryPostgres) GetIdByUsername(ctx context.Context, username s
 	}
 
 	return user.Id, nil
+}
+
+func (u *UserRepositoryPostgres) GetUserById(ctx context.Context, id string) (*entities.User, error) {
+	query := "SELECT id, name, username, email, is_active FROM users WHERE id = $1"
+	user := entities.User{}
+
+	tx, err := u.DB.Beginx()
+	if err != nil {
+		log.Error("database error", logrus.Fields{"with": err})
+		return nil, err
+	}
+
+	err = tx.GetContext(ctx, &user, query, id)
+	if err != nil {
+		log.Warn("user tidak ditemukan", logrus.Fields{"id": id})
+		return nil, err
+	}
+
+	return &user, nil
 }

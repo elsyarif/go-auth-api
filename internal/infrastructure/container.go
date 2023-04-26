@@ -20,6 +20,13 @@ func Container(db *sqlx.DB, app *gin.Engine) {
 	userUseCase := usecases.NewUserUseCase(userService)
 	userHandler := handler.NewUserHandler(userUseCase)
 
+	// authentication
+	authRepository := repositories.NewAuthRepositoryPostgres(db)
+	authService := services.NewAuthService(authRepository, userRepository, hash)
+	authUseCae := usecases.NewAuthUseCase(authService, userService)
+	authHandler := handler.NewAuthHandler(authUseCae)
+
 	// routes
 	userHandler.Routes(app)
+	authHandler.Routes(app)
 }

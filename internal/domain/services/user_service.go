@@ -48,3 +48,7 @@ func (u *UserService) CreateUser(ctx context.Context, user entities.User) (*enti
 
 	return &user, nil
 }
+
+func (u *UserService) GetUserById(ctx context.Context, id string) (*entities.User, error) {
+	return u.userRepo.GetUserById(ctx, id)
+}
