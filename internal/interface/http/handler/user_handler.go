@@ -6,6 +6,7 @@ import (
 	"github.com/elsyarif/go-auth-api/internal/domain/entities"
 	"github.com/elsyarif/go-auth-api/pkg/common"
 	"github.com/elsyarif/go-auth-api/pkg/helper"
+	"github.com/elsyarif/go-auth-api/pkg/middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -21,6 +22,12 @@ func NewUserHandler(addUser usecases.UserUseCase) UserHandler {
 func (h *UserHandler) Routes(app *gin.Engine) {
 	user := app.Group("/users")
 	user.POST("", h.PostUserHandler)
+	user.GET("/profile", middleware.Protected(), func(c *gin.Context) {
+		user, _ := c.Get("user")
+		c.JSON(http.StatusOK, gin.H{
+			"user": user,
+		})
+	})
 }
 
 func (h *UserHandler) PostUserHandler(c *gin.Context) {
