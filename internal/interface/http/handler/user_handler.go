@@ -23,7 +23,7 @@ func (h *UserHandler) Routes(app *gin.Engine) {
 	user := app.Group("/users")
 	user.POST("", h.PostUserHandler)
 	user.GET("/profile", middleware.Protected(), func(c *gin.Context) {
-		user, _ := c.Get("user")
+		user, _ := c.Get("users")
 		c.JSON(http.StatusOK, gin.H{
 			"user": user,
 		})

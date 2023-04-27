@@ -16,12 +16,12 @@ func Protected() gin.HandlerFunc {
 			return
 		}
 
-		if strings.Contains(authHeader, "Bearer") {
+		if !strings.Contains(authHeader, "Bearer") {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, helper.ResponseJSON.Error("fail", "invalid token", nil))
 			return
 		}
 
-		tokenString := strings.Replace(authHeader, "Bearer  ", "", -1)
+		tokenString := strings.Replace(authHeader, "Bearer ", "", -1)
 
 		claims, err := helper.VerifyToken(tokenString, helper.AccessToken)
 		if err != nil {
