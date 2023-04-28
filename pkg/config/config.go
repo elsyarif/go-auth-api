@@ -14,7 +14,7 @@ type config struct {
 	ShutdownTimeout time.Duration `default:"20s"`
 	AccessTokenKey  string        `default:"secret"`
 	RefreshTokenKey string        `default:"secret"`
-	AccessTokenAge  time.Duration `default:"1s"`
+	AccessTokenAge  time.Duration `default:"100ns"`
 }
 
 var Conf config

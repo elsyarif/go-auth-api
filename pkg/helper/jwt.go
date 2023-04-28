@@ -25,7 +25,7 @@ func GenerateToken(id string, username string, code string) (string, error) {
 	switch code {
 	case AccessToken:
 		age = config.Conf.AccessTokenAge
-		expirationTime = time.Now().Add(age * time.Minute)
+		expirationTime = time.Now().Add(age * time.Second)
 		jwtKey = config.Conf.AccessTokenKey
 	case RefreshToken:
 		expirationTime = time.Now().Add(72 * time.Hour)
