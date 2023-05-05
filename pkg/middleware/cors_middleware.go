@@ -12,7 +12,7 @@ func CorsMiddleware() gin.HandlerFunc {
 		log.Info("origin", logrus.Fields{"origin": origin})
 
 		if origin != "" && isAllowedOrigin(origin) {
-			c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+			c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
 			c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 			c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 			c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -28,7 +28,7 @@ func CorsMiddleware() gin.HandlerFunc {
 }
 
 func isAllowedOrigin(origin string) bool {
-	allowedOrigin := []string{"http://localhost:3000", "http://127.0.0.1:3000/"}
+	allowedOrigin := []string{"http://localhost:3000", "http://127.0.0.1:3000"}
 
 	for _, o := range allowedOrigin {
 		if o == origin {
