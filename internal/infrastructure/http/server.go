@@ -52,6 +52,7 @@ func NewServer(
 		db:              db,
 	}
 
+	svr.engine.Use(middleware.CorsMiddleware())
 	svr.engine.Use(middleware.ErrorHandler)
 	infrastructure.Container(db, svr.engine)
 	return serverContext(ctx), svr
