@@ -36,8 +36,7 @@ func init() {
 
 	if fileModTime.Day() != now.Day() {
 		file.Close()
-		yesterday := now.AddDate(0, 0, -1)
-		newLogFileName := "app_" + yesterday.Format("02012006") + ".log"
+		newLogFileName := "app_log_" + fileModTime.Format("02012006") + ".log"
 
 		err := os.Rename(path+logFileName, path+newLogFileName)
 		if err != nil {
